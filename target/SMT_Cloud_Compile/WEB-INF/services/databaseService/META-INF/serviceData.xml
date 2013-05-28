@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceData>
+ <!-- <Data dialect="http://schemas.xmlsoap.org/wsdl/"  
+  file="META-INF/DefaultAxis2DataLocatorDemoService.wsdl">
+  <URL>"http://localhost/services/CertRevokeService?wsdl" </URL>
+ </Data>
+ <Data dialect ="http://www.w3.org/2001/XMLSchema " file="META-INF/DefaultAxis2DataLocatorDemoService.xsd">
+  <URL> http://localhost/services/CertRevokeService?xsd </URL>
+ </Data> -->
+</ServiceData>
