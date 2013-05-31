@@ -2,10 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>smtonline.compile</groupId>
+<<<<<<< HEAD
 	<artifactId>SMT_Cloud_Compile</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>SMT_Cloud_Compile Maven Webapp</name>
+=======
+	<artifactId>DatabaseAdapter</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0</version>
+	<name>SMT_DatabaseAdapter Maven Webapp</name>
+>>>>>>> 62ea5076d7cf0c477d3774ceffe15c5597bf4da8
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
