@@ -1,0 +1,14 @@
+<datasources>
+	<datasource name="DataM" source="~/Controller.svc" bindtype="control"
+		entry="DataBus" responsetype="json">
+		<function interface="/Controller.svc"
+			object="SMT.SaaS.Mobile.MSCService.MobileBiz.DoTaskServer" action="auto"
+			method="GetPendingTaskPrevNext" />
+		<parameters>
+			<parameter name="strUserID" value="{@UserInfo.UserID}" />
+			<parameter name="strStatus" value="1" />
+			<parameter name="messageid" value="" />
+
+		</parameters>
+	</datasource>
+</datasources>
