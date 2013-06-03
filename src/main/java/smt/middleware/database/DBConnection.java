@@ -8,20 +8,28 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DBConnection {
-	
-	private static String MYSQL = "ds1";   
-    
-    private static String SLAVEDS = "ds2";  
 
 	public Connection getConnection() throws SQLException{
+		
 		// 获取上下文   
     	ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
 
         // 获取从数据库连接   
     	BasicDataSource curr_ds = (BasicDataSource) context   
-                .getBean(MYSQL);   
+                .getBean("dataSource");
+    	ResolveDataSource resolve = (ResolveDataSource) context.getBean("resolve");
 
+    	curr_ds.setDriverClassName(resolve.getDriverClassName());
+    	curr_ds.setUrl(resolve.getUrl());
+    	curr_ds.setUsername(resolve.getUserName());
+    	curr_ds.setPassword(resolve.getPassword());
+    	curr_ds.setMaxActive(resolve.getMaxActive());
+    	curr_ds.setMaxIdle(resolve.getMaxIdle());
+    	curr_ds.setMaxWait(resolve.getMaxWait());
+    	
         Connection conn = curr_ds.getConnection();   
+        
+        System.out.println(conn);
         
         return conn;
 	}
