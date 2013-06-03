@@ -1,17 +1,15 @@
 package smt.middleware.core;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
+
+import util.DomUtils;
 
 public class DataSourceParse {
 	private Element rootElement;
@@ -19,9 +17,7 @@ public class DataSourceParse {
 	private String sqlFileName;
 	private Map<String, String> parametersMap;
 	public DataSourceParse(String xml) throws DocumentException {
-		SAXReader saxReader = new SAXReader();
-		InputStream saxInputStream = new ByteArrayInputStream(xml.getBytes());
-		Document rootDocument = saxReader.read(saxInputStream);
+		Document rootDocument = DomUtils.getDocumentByXml(xml);
 		rootElement = rootDocument.getRootElement();
 		responseType = parseResponseType();
 		sqlFileName = parseSqlFileName();

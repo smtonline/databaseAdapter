@@ -6,9 +6,11 @@
  */
 package util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -29,9 +31,21 @@ public class DomUtils {
 	 * @return
 	 * @throws DocumentException
 	 */
-	public static Document getDocment(String fullPath) throws DocumentException {
+	public static Document getDocmentByFile(String fullPath) throws DocumentException {
 		SAXReader saxReader = new SAXReader();
 		return saxReader.read(fullPath);
+	}
+	
+	/**
+	 * 通过xml字符串,初始化Document对象
+	 * @param documentXml
+	 * @return
+	 * @throws DocumentException
+	 */
+	public static Document getDocumentByXml(String documentXml) throws DocumentException {
+		SAXReader saxReader = new SAXReader();
+		InputStream saxInputStream = new ByteArrayInputStream(documentXml.getBytes());
+		return saxReader.read(saxInputStream);
 	}
 	
 	/**

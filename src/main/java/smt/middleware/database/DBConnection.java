@@ -31,7 +31,6 @@ public class DBConnection {
 		try {
 			conn.getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

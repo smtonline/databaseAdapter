@@ -1,10 +1,10 @@
 <serviceGroup>
   <!-- 系统通知ws服务 -->
-  <service name="compile" targetNamespace="http://tempuri.org/">
-    <description>compile service</description>
+  <service name="Controller" targetNamespace="http://tempuri.org/">
+    <description>database Adapter</description>
     <schema schemaNamespace="http://tempuri.org/" />
-    <parameter name="ServiceClass" locked="false">smt.middleware.core.DatabaseService</parameter>
-    <operation name="getDatabaseName">
+    <parameter name="ServiceClass" locked="false">smt.middleware.service.Controller</parameter>
+    <operation name="dataBus">
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
   </service>
