@@ -1,11 +1,13 @@
 package smt.middleware.service;
 
+import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 
 import smt.middleware.core.DataSourceParse;
+import util.Environment;
 
 /**
  * 数据库适配服务接口
@@ -31,7 +33,6 @@ public class Controller {
 		Map<String, String> parametersMap = dsParse.getParametersMap();
 		String result = executeSql(sqlFileName, parametersMap,
 				StringUtils.equalsIgnoreCase("json", responseType));
-		
 		return result;
 	}
 	
@@ -43,6 +44,13 @@ public class Controller {
 	 * @return
 	 */
 	private String executeSql(String sqlFileName, Map<String, String> parametersMap, boolean isJsonFormat) {
+		String msdUrl = getDatasourcePath() + File.separator + sqlFileName;
+		System.out.println("test1223333:" + msdUrl);
 		return "";
+	}
+	
+	private String getDatasourcePath() {
+		Environment e = new Environment();
+		return e.getDatasourceFolderPath();
 	}
 }
