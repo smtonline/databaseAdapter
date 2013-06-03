@@ -28,33 +28,28 @@
 
 	<!-- <bean id="mysqlDB" class="smt.middleware.database.MysqlDBAdapter"></bean> -->
 
-	<bean id="dataSource" class="smt.middleware.database.DynamicDataSource">
-		<property name="targetDataSources">
-			<map key-type="java.lang.String">
-				<entry key="1" value-ref="ds1" />
-				<entry key="2" value-ref="ds2" />
-			</map>
-		</property>
-		<property name="defaultTargetDataSource" ref="ds1" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 	</bean>
+	
+	<bean id="resolve" class="smt.middleware.database.ResolveDataSource"></bean>
 
 	<!-- 数据源定义 -->
-	<bean id="ds1" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/demo" />
-		<property name="username" value="root" />
-		<property name="password" value="123456" />
-	</bean>
+<!-- 	<bean id="ds1" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:mysql://192.168.1.107:3306/test" /> -->
+<!-- 		<property name="username" value="root" /> -->
+<!-- 		<property name="password" value="123456" /> -->
+<!-- 	</bean> -->
 
 
 
-	<bean id="ds2" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${jdbcOrcale.driverClassName}" />
-		<property name="url" value="${jdbcOrcale.url}" />
-		<property name="username" value="${jdbcOrcale.username}" />
-		<property name="password" value="${jdbcOrcale.password}" />
-	</bean>
+<!-- 	<bean id="ds2" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="${jdbcOrcale.driverClassName}" /> -->
+<!-- 		<property name="url" value="${jdbcOrcale.url}" /> -->
+<!-- 		<property name="username" value="${jdbcOrcale.username}" /> -->
+<!-- 		<property name="password" value="${jdbcOrcale.password}" /> -->
+<!-- 	</bean> -->
 
 </beans>
