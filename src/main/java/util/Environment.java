@@ -14,6 +14,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
@@ -32,7 +34,10 @@ public class Environment {
 	//数据库密码
 	private String mDBPassword;
 	private String mDBName;
+	
+	private ApplicationContext mContext;
 	private Environment() {
+		mContext = new ClassPathXmlApplicationContext("spring-config.xml");
 		findDatasourceFolderPath();
 		initDatabaseConfig();
 	}
@@ -87,6 +92,16 @@ public class Environment {
 	public String getDBName() {
 		return mDBName;
 	}
+	
+	/**
+	 * 获取bean对象
+	 * @param name
+	 * @return
+	 */
+	public Object getBean(String name) {
+		return mContext.getBean(name);
+	}
+	
 	/**
 	 * web项目解压后的根目录:~/webapp/SMT_DataAdapter/
 	 * @return
@@ -145,4 +160,6 @@ public class Environment {
 		Element dbPasswordElement = (Element)dbPasswordNode;
 		mDBPassword = dbPasswordElement.attributeValue("value");
 	}
+	
+	
 }

@@ -2,7 +2,6 @@ package smt.middleware.service;
 
 import java.io.File;
 import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -25,6 +24,7 @@ public class Controller {
 	 * 客户端请求服务接口
 	 */
 	public String dataBus(String xml) {
+		
 		if (StringUtils.isEmpty(xml)) {
 			return XML_FORMAT_ERROR;
 		}
@@ -42,9 +42,10 @@ public class Controller {
 			result = executeSql(sqlFileName, parametersMap,
 					StringUtils.equalsIgnoreCase("json", responseType));
 		} catch (DocumentException e) {
-			log.debug("");
-			return 
+			log.debug("msc文件格式错误", e);
+			return MSD_FORMAT_ERROR;
 		}
+		
 		return result;
 	}
 	
@@ -60,6 +61,17 @@ public class Controller {
 		String dsFolderPath = environment.getDatasourceFolderPath();
 		File msdFile = new File(dsFolderPath, msdFileName);
 		Element rootElement = DomUtils.getDocmentByFile(msdFile.getAbsolutePath()).getRootElement();
+		//获取数据库脚本
+		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
+		String sql = sqlElement.getText();
+		
+		//TODO:执行sql语句
+		
+		if (isJsonFormat) {
+			
+		} else {
+			
+		}
 		return "";
 	}
 	
