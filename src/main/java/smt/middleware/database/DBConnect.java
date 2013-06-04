@@ -3,6 +3,7 @@ package smt.middleware.database;
 import java.util.Dictionary;
 import java.util.List;
 
+import smt.middleware.entity.DataTable;
 import smt.middleware.entity.MetadataInfo;
 import smt.middleware.entity.ProjectInfo;
 import smt.middleware.entity.TableInfo;
@@ -26,7 +27,7 @@ public abstract class DBConnect {
     /// 查询数据库中所有用户表
     /// </summary>
     /// <returns>DataTable</returns>
-//    public abstract DataTable GetUserTables();
+    public abstract DataTable GetUserTables();
 
      /// <summary>
     /// 获取指定表的结构
@@ -46,7 +47,7 @@ public abstract class DBConnect {
     /// </summary>
     /// <param name="modelName">元数据标识名称</param>
     /// <returns>返回数据集</returns>
-//    public abstract DataTable GetMetadataByModelName(String modelName);
+    public abstract DataTable GetMetadataByModelName(String modelName);
 
     /// <summary>
     /// 增加元数据信息
@@ -75,7 +76,7 @@ public abstract class DBConnect {
     /// </summary>
     /// <param name="sql">sql语句</param>
     /// <returns>返回数据集</returns>
-//    public abstract DataTable GetQuery(String sql);
+    public abstract DataTable GetQuery(String sql);
     
     /// <summary>
     /// 根据IDE的查询分析器的sql语句操作数据(insert/update/delete)
@@ -90,7 +91,7 @@ public abstract class DBConnect {
     /// <param name="sql">sql语句</param>
     ///  <param name="sql">参数</param>
     /// <returns>返回数据集</returns>
-//    public abstract DataTable GetQuery(String sql,Dictionary<String,String> sqlParam);
+    public abstract DataTable GetQuery(String sql,Dictionary<String,String> sqlParam);
 
     /// <summary>
     /// 根据IDE的查询分析器的sql语句操作数据(insert/update/delete)

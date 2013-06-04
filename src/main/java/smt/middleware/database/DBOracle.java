@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import smt.middleware.entity.DataTable;
 import smt.middleware.entity.MetadataInfo;
 import smt.middleware.entity.ProjectInfo;
 import smt.middleware.entity.TableInfo;
@@ -50,8 +51,11 @@ public class DBOracle extends DBConnect {
 		}
 	}
 
+	/**
+	 * 提交删除命令
+	 */
 	@Override
-	public String DeleteBySql(String strsql) {//提交删除命令
+	public String DeleteBySql(String strsql) {
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement pre = connection.prepareStatement(strsql);
@@ -121,6 +125,30 @@ public class DBOracle extends DBConnect {
 	public boolean ReleaseDBSave(List<ProjectInfo> list) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public DataTable GetUserTables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataTable GetMetadataByModelName(String modelName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataTable GetQuery(String sql) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DataTable GetQuery(String sql, Dictionary<String, String> sqlParam) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

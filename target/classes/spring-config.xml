@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<context:component-scan base-package="smt.middleware.database" />
+
+	<!-- =============================================================== -->
+	<!-- Data Source -->
+	<!-- =============================================================== -->
+
+	<!-- <bean -->
+	<!-- id="dataSource" -->
+	<!-- class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+
+	<!-- </bean> -->
+
+	<!-- =============================================================== -->
+	<!-- Services -->
+	<!-- =============================================================== -->
+
+
+	<!-- <bean id="mysqlDB" class="smt.middleware.database.MysqlDBAdapter"></bean> -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	</bean>
+	
+	<bean id="resolve" class="smt.middleware.database.ResolveDataSource"></bean>
+
+	<!-- 数据源定义 -->
+<!-- 	<bean id="ds1" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+<!-- 		<property name="url" value="jdbc:mysql://192.168.1.107:3306/test" /> -->
+<!-- 		<property name="username" value="root" /> -->
+<!-- 		<property name="password" value="123456" /> -->
+<!-- 	</bean> -->
+
+
+
+<!-- 	<bean id="ds2" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="${jdbcOrcale.driverClassName}" /> -->
+<!-- 		<property name="url" value="${jdbcOrcale.url}" /> -->
+<!-- 		<property name="username" value="${jdbcOrcale.username}" /> -->
+<!-- 		<property name="password" value="${jdbcOrcale.password}" /> -->
+<!-- 	</bean> -->
+
+</beans>
