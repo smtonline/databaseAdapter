@@ -49,6 +49,30 @@ public class Controller {
 		return result;
 	}
 	
+//	public string DMTSql(string tableName, Dictionary<string, string> param)
+//    {
+//        string databaseType = string.Empty;
+//        string strConn = DBBase.GetConnectString(ref databaseType);
+//        DBFactory myFactory = new DBFactory();
+//        DBConnect dbConnect = myFactory.CreatConnect(databaseType, strConn);
+//        string msdurl = HostingEnvironment.ApplicationPhysicalPath + @"\datasource\" + tableName;
+//        XmlDocument xmlDoc = new XmlDocument();
+//        xmlDoc.Load(msdurl);
+//        XmlNode root = xmlDoc.SelectSingleNode("system/sql");//查找 
+//        string sql = root.InnerXml;
+//        int result = dbConnect.DMLSql(sql.Replace("<![CDATA[", "").Replace("]]>", ""), param);
+//        if (result >= 1)
+//        {
+//            return "1";
+//        }
+//        else
+//        {
+//            return "0";
+//        }
+//        
+//
+//    }
+	
 	/**
 	 * 执行sql语句
 	 * @param msdFileName msd模板文件
@@ -66,13 +90,13 @@ public class Controller {
 		String sql = sqlElement.getText();
 		
 		//TODO:执行sql语句
-		
+		String result = null;
 		if (isJsonFormat) {
 			
 		} else {
 			
 		}
-		return "";
+		return result;
 	}
 	
 }
