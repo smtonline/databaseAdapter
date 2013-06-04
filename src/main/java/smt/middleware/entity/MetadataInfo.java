@@ -3,19 +3,19 @@ package smt.middleware.entity;
 public class MetadataInfo {
 
     /// 元数据主键ID
-    public String metadataID ;
+	private String metadataID ;
     
     /// 系统编码
-    public String systemCode ;
+	private String systemCode ;
     
     /// 实体编码
-    public String modelCode ;
+	private String modelCode ;
     
     /// 实体名称
-    public String modelName ;
+	private String modelName ;
     
     /// 元数据xml
-    public byte[] metadataSample;
+	private byte[] metadataSample;
 
 	public String getMetadataID() {
 		return metadataID;

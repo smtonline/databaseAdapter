@@ -7,34 +7,34 @@ package smt.middleware.entity;
  */
 public class ProjectInfo {
 	//唯一标识
-    public String recordID ;
+	private String recordID ;
     
     /// 解决方案ID
-    public String solutionID ;
+	private String solutionID ;
     
     /// 项目ID
-    public String projectID ;
+	private String projectID ;
     
     /// 设计器表单ID
-    public String formID ;
+	private String formID ;
    
     /// 设备类型：iPhone、Android、IPad等
-    public String deviceType ;
+	private String deviceType ;
     
     /// 虚拟路径
-    public String path ;
+	private String path ;
     
     /// 文件内容
-    public byte[] content ;
+	private byte[] content ;
     
     /// 文件类型
-    public String fileType ;
+	private String fileType ;
     
     /// 模块ID号
-    public String modelID ;
+	private String modelID ;
     
     /// 文件内容
-    public String stringContent ;
+	private String stringContent ;
     
     public String getRecordID() {
 		return recordID;

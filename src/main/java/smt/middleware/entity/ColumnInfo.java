@@ -2,24 +2,59 @@ package smt.middleware.entity;
 
 public class ColumnInfo {
 
-	/// <summary>
     /// 列名
-    /// </summary>
-    public string Name { get; set; }
-    /// <summary>
+	private String name ;
+    
     /// 列描述
-    /// </summary>
-    public string Comments { get; set; }
-    /// <summary>
+	private String comments ;
+    
     /// 类型
-    /// </summary>
-    public string Type { get; set; }
-    /// <summary>
+	private String type ;
+    
     /// 长度
-    /// </summary>
-    public int Lenght { get; set; }
-    /// <summary>
+	private int lenght ;
+    
     /// 是否为空
-    /// </summary>
-    public bool IsNull { get; set; }
+	private boolean isNull ;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getLenght() {
+		return lenght;
+	}
+
+	public void setLenght(int lenght) {
+		this.lenght = lenght;
+	}
+
+	public boolean isNull() {
+		return isNull;
+	}
+
+	public void setNull(boolean isNull) {
+		this.isNull = isNull;
+	}
+    
 }

@@ -5,10 +5,10 @@ import java.util.List;
 public class TableInfo {
 
     /// 表名称
-    public String name;
+	private String name;
     
     /// 表描述
-    public String comments ;
+	private String comments ;
 
 	public String getName() {
 		return name;
@@ -27,5 +27,13 @@ public class TableInfo {
 	}
     
     /// 该表中的所有列
-  //  public List<ColumnInfo> columnList ;
+	private List<ColumnInfo> columnList ;
+
+	public List<ColumnInfo> getColumnList() {
+		return columnList;
+	}
+
+	public void setColumnList(List<ColumnInfo> columnList) {
+		this.columnList = columnList;
+	}
 }
