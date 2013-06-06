@@ -14,10 +14,11 @@ import junit.framework.TestCase;
 public class DBTest extends TestCase{
 	private final Logger log = Logger.getLogger(DBTest.class);
 	public void testQuery() throws SQLException {
-		DBConnect c = DBFactory.CreatConnect("mysql");
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put("@name", "name");
-		DataTable db= c.getQuery("select * from userinfo where name=@name", map);
-		log.debug(db.toXml());
+		DBConnect c = DBFactory.CreatConnect("oracle");
+//		Map<String, String> map = new LinkedHashMap<String, String>();
+//		map.put("@name", "name");
+//		DataTable db= c.getQuery("select * from userinfo where name=@name", map);
+//		log.debug(db.toXml());
+		c.executeNoParams("getuserinfo");
 	}
 }

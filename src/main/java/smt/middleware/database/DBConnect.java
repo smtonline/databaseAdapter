@@ -5,12 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -160,4 +159,29 @@ public abstract class DBConnect {
 		}
 		return count;
 	}
+	
+	/**
+	 * 不带参数的存储过程
+	 */
+	public abstract void executeNoParams(String callableName);
+	
+	/**
+	 * 带有输入参数的存储过程
+	 */
+	public abstract void executeInParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有输出参数存储过程
+	 */
+	public abstract void executeOutParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有返回状态存储过程
+	 */
+	public abstract void executeReturnParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有更新计数的存储过程
+	 */
+	public abstract void executeUpdateCount(String callableName, String[] sqlParam);
 }
