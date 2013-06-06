@@ -1,19 +1,27 @@
 package smt.middleware.entity;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import smt.middleware.database.DBConnection;
+
 public class DataTable {
 	private static final Logger log = Logger.getLogger(DataTable.class);
 //	private String[] columnsName;
 //	private String[] dataType;
-	private ResultSet resultSet;
+	private Connection connection = null;
+	private PreparedStatement preparedStatement = null;
+	private ResultSet resultSet = null;
 	private ResultSetMetaData metaData;
-	public DataTable(ResultSet rs) {
+	public DataTable(Connection conn,PreparedStatement pre,ResultSet rs) {
 		try {
+			connection = conn;
+			preparedStatement = pre;
 			resultSet = rs;
 			metaData = rs.getMetaData();
 		} catch (SQLException e) {
@@ -69,6 +77,7 @@ public class DataTable {
         	xmlBuffer.append("</rows>\n");
         }
         xmlBuffer.append("</data>");
+        DBConnection.close(connection,preparedStatement,resultSet);
 		return xmlBuffer.toString();
 	}
 	/**
@@ -103,6 +112,7 @@ public class DataTable {
 			}
 		}
         jsonString.append("]");
+        DBConnection.close(connection,preparedStatement,resultSet);
         return jsonString.toString();
 	}
 }

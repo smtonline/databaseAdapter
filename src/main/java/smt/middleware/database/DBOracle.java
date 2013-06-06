@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -89,7 +87,7 @@ public class DBOracle extends DBConnect {
 		try {
 			pre = connection.prepareStatement(strSql);
 			rs = pre.executeQuery();
-			dataTable = new DataTable(rs);
+			dataTable = new DataTable(connection,pre,rs);
 			return dataTable;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -137,7 +135,7 @@ public class DBOracle extends DBConnect {
 			for (String str : list) {
 				pre.setObject(list.indexOf(str) + 1, str);
 			}
-			return new DataTable(pre.executeQuery());
+			return new DataTable(connection,pre,pre.executeQuery());
 		}catch(SQLException ex){
 			log.error("Query Erro", ex);
 		}finally{

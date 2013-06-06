@@ -74,9 +74,9 @@ public class DBConnection {
 	}
 	
 	public static void close(Connection conn,PreparedStatement pre,ResultSet rs){
-		close(conn);
-		close(pre);
 		close(rs);
+		close(pre);
+		close(conn);
 	}
 	
 	public static void close(Connection conn){
