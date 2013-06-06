@@ -33,34 +33,33 @@ public class DBConnection {
 
 		log.info("start connection data........");
         // 获取从数据库连接   
-    	BasicDataSource curr_ds = new BasicDataSource();
     	Environment environment = Environment.getInstance();
-    	
+    	mDatasource = new BasicDataSource();
     	String post = environment.getDBPort();
     	if(environment.getDBType().equals(Global.ORACLE_TYPE)){
-    		curr_ds.setDriverClassName(Global.ORACLE_DRIVER);
+    		mDatasource.setDriverClassName(Global.ORACLE_DRIVER);
     		if(environment.getDBPort() == null || environment.getDBPort().equals("")){
     			post = "1521";
         	}
-        	curr_ds.setUrl(Global.ORACLE_URL + environment.getDBAddress() +":"+ post +":"+ environment.getDBName());
+    		mDatasource.setUrl(Global.ORACLE_URL + environment.getDBAddress() +":"+ post +":"+ environment.getDBName());
     	}else if(environment.getDBType().equals(Global.MYSQL_TYPE)){
-    		curr_ds.setDriverClassName(Global.MYSQL_DRIVER);
+    		mDatasource.setDriverClassName(Global.MYSQL_DRIVER);
     		if(environment.getDBPort() == null || environment.getDBPort().equals("")){
     			post = "3306";
         	}
-        	curr_ds.setUrl(Global.MYSQL_URL + environment.getDBAddress() +":"+ post +"/"+ environment.getDBName());
+    		mDatasource.setUrl(Global.MYSQL_URL + environment.getDBAddress() +":"+ post +"/"+ environment.getDBName());
     	}else if(environment.getDBType().equals(Global.MSSQL_TYPE)){
-    		curr_ds.setDriverClassName(Global.MSSQL_DRIVER);
+    		mDatasource.setDriverClassName(Global.MSSQL_DRIVER);
     		if(environment.getDBPort() == null || environment.getDBPort().equals("")){
     			post = "1433";
         	}
-        	curr_ds.setUrl(Global.MSSQL_URL + environment.getDBAddress() +":"+ post +";DatabaseName="+ environment.getDBName());
+    		mDatasource.setUrl(Global.MSSQL_URL + environment.getDBAddress() +":"+ post +";DatabaseName="+ environment.getDBName());
     	}    	
-    	curr_ds.setUsername(environment.getDBUserName());
-    	curr_ds.setPassword(environment.getDBPassword());
-    	curr_ds.setMaxActive(Config.getInt("jdbcMaxActive"));
-    	curr_ds.setMaxIdle(Config.getInt("jdbcMaxIdle"));
-    	curr_ds.setMaxWait(Config.getInt("jdbcMaxWait"));
+    	mDatasource.setUsername(environment.getDBUserName());
+    	mDatasource.setPassword(environment.getDBPassword());
+    	mDatasource.setMaxActive(Config.getInt("jdbcMaxActive"));
+    	mDatasource.setMaxIdle(Config.getInt("jdbcMaxIdle"));
+    	mDatasource.setMaxWait(Config.getInt("jdbcMaxWait"));
     	log.info("datasource init finish........");
     	
 	}

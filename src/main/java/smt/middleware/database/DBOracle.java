@@ -131,7 +131,9 @@ public class DBOracle extends DBConnect {
 				sql = sql.replaceAll(key, "?");
 				list.add(value);
 			}
-			pre = connection.prepareStatement(sql);
+			pre = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			log.debug(sql);
+			log.debug(list.toString());
 			for (String str : list) {
 				pre.setObject(list.indexOf(str) + 1, str);
 			}
@@ -139,7 +141,7 @@ public class DBOracle extends DBConnect {
 		}catch(SQLException ex){
 			log.error("Query Erro", ex);
 		}finally{
-			DBConnection.close(connection, pre, rs);
+			//DBConnection.close(connection, pre, rs);
 		}
 		return null;
 	}
