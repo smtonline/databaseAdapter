@@ -5,214 +5,150 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
-import smt.middleware.entity.ColumnInfo;
+
 import smt.middleware.entity.DataTable;
-import smt.middleware.entity.MetadataInfo;
-import smt.middleware.entity.ProjectInfo;
-import smt.middleware.entity.TableInfo;
 
 public class DBOracle extends DBConnect {
 
 	private final Logger log = Logger.getLogger(DBOracle.class);
-	
-	private Connection mConnection; //全局数据库连接
-	
-	public DBOracle(Connection connection) throws SQLException{
-		mConnection = connection;
-		
+
+	private Connection connection; // 全局数据库连接
+
+	public DBOracle(Connection connection) throws SQLException {
+		this.connection = connection;
+
 	}
 
 	/**
 	 * 提交删除命令
 	 */
 	@Override
-	public String DeleteBySql(String strsql) {
+	public String deleteBySql(String strsql) {
+		// TODO Auto-generated method stub
+		PreparedStatement pre = null;
 		try {
-			PreparedStatement pre = mConnection.prepareStatement(strsql);
+			pre = connection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
 			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
 		}
 	}
 
 	/**
 	 * 提交更新命令
-	 * @param strsql
-	 * @return
 	 */
-	public String UpdateBySql(String strsql){
+	@Override
+	public String updateBySql(String strsql) {
+		// TODO Auto-generated method stub
+		PreparedStatement pre = null;
 		try {
-			PreparedStatement pre = mConnection.prepareStatement(strsql);
-			
+			pre = connection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
 			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
 		}
 	}
-	
-	/**
-	 * 提交插入命令
-	 * @param strsql
-	 * @return
-	 */
-	public String InsertBySql(String strsql){
+
+	@Override
+	public String insertBySql(String strsql) {
+		// TODO Auto-generated method stub
+		PreparedStatement pre = null;
 		try {
-			PreparedStatement pre = mConnection.prepareStatement(strsql);
+			pre = connection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
 			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
 		}
 	}
-	
-	/**
-	 * 获取指定表的结构
-	 * @param tableName
-	 * @return
-	 * @throws SQLException 
-	 */
-	public TableInfo GetUserTableSchema(String tableName){
-		ResultSet dtTab = GetUserTalbeByTableName(tableName);
-		ResultSet dt = GetUserTableColumns(tableName);
-		TableInfo table = null;
+
+	@Override
+	public DataTable getQuery(String sql) {
+		// TODO Auto-generated method stub
+		String strSql = sql;
+		DataTable dataTable = null;
+		PreparedStatement pre = null;
+		ResultSet rs = null;
+		try {
+			pre = connection.prepareStatement(strSql);
+			rs = pre.executeQuery();
+			dataTable = new DataTable(rs);
+			return dataTable;
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBConnection.close(connection, pre, rs);
+		}
+		return dataTable;
+	}
+
+	@Override
+	public int dmlSql(String sql) {
+		PreparedStatement pre = null;
+		int result = 0;
+		try {
+			pre = connection.prepareStatement(sql);
+			result = pre.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBConnection.close(connection, pre, null);
+		}
+		return result;
+	}
+
+	@Override
+	public DataTable getQuery(String sql, Map<String, String> sqlParam) {
+		// TODO Auto-generated method stub
+		PreparedStatement pre = null;
+		ResultSet rs = null;
 		try{
-			while(dtTab.next()){
-				table = new TableInfo();
-				table.setName(dtTab.getString("table_name"));
-				table.setComments(dtTab.getString("comments"));
-				List<ColumnInfo> colList = new ArrayList<ColumnInfo>();
-				ResultSet dtCol = GetUserTableColumns(table.getName());
-				while(dtCol.next()){
-					ColumnInfo column = new ColumnInfo();
-					column.setName(dtCol.getString("COLUMN_NAME"));
-					column.setComments(dtCol.getString("comments"));
-					column.setType(dtCol.getString("data_type"));
-					column.setLenght(dtCol.getInt("DATA_LENGTH"));
-					column.setNull(dtCol.getString("NULLABLE").equals("Y") ? true : false);
-					colList.add(column);
-				}
-				table.setColumnList(colList);
+			Set<Entry<String, String>> set = sqlParam.entrySet();
+			Iterator<Entry<String, String>> iterator = set.iterator();
+			List<String> list = new ArrayList<String>();
+			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
+				Entry<String, String> entry = (Entry<String, String>) iterator2
+						.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				sql = sql.replaceAll(key, "?");
+				list.add(value);
 			}
+			pre = connection.prepareStatement(sql);
+			for (String str : list) {
+				pre.setObject(list.indexOf(str) + 1, str);
+			}
+			return new DataTable(pre.executeQuery());
 		}catch(SQLException ex){
-			log.error(ex);
-		}		
-		return table;
+			log.error("Query Erro", ex);
+		}finally{
+			DBConnection.close(connection, pre, rs);
+		}
+		return null;
+	}
+
+	@Override
+	public int dmlSql(String sql, Map<String, String> sqlParam) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
-	/**
-	 * 根据表名查询
-	 * @param tableName
-	 * @return
-	 */
-	private ResultSet GetUserTalbeByTableName(String tableName){
-		 StringBuilder strSql = new StringBuilder();
-         strSql.append(" select t.table_name,c.comments from user_tables t ");
-         strSql.append(" join all_tab_comments c ");
-         strSql.append(" on t.table_name=c.table_name ");
-         strSql.append(" where t.table_name= ? ");
-         try {
-			PreparedStatement pre = mConnection.prepareStatement(strSql.toString());
-			pre.setString(0, tableName);
-			ResultSet re = pre.executeQuery();
-			return re;
-		} catch (SQLException e) {
-			return null;
-		}
-	}
-	
-	/**
-	 * 查询数据库中用户表的字段
-	 * @param tableName
-	 * @return
-	 */
-	private ResultSet GetUserTableColumns(String tableName){
-		StringBuilder strSql = new StringBuilder();
-
-        strSql.append(" select t.COLUMN_NAME,c.comments,t.DATA_TYPE,t.DATA_LENGTH,t.NULLABLE from user_tab_columns t ");
-        strSql.append(" join user_col_comments c ");
-        strSql.append(" on t.COLUMN_NAME=c.column_name and t.TABLE_NAME=c.table_name ");
-        strSql.append(" where t.table_name = ? ");
-        
-        try {
-			PreparedStatement pre = mConnection.prepareStatement(strSql.toString());
-			pre.setString(0, tableName);
-			ResultSet re = pre.executeQuery();
-			return re;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			return null;
-		}
-	}
-
-	@Override
-	public List<TableInfo> GetUserDBSchema() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int MetadataSave(MetadataInfo info) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int MetadataDelete(String metadataID) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String GetMoblieTemplate(String DeviceType, String ModelID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int DMLSql(String sql) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int DMLSql(String sql, Dictionary<String, String> sqlParam) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean ReleaseDBSave(List<ProjectInfo> list) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public DataTable GetUserTables() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataTable GetMetadataByModelName(String modelName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataTable GetQuery(String sql) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public DataTable GetQuery(String sql, Dictionary<String, String> sqlParam) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

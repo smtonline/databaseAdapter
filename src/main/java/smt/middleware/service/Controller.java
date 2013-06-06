@@ -103,7 +103,7 @@ public class Controller {
 	
 	public String test() throws SQLException {
 		DBConnect connect = DBFactory.CreatConnect("oracle");
-		return connect.UpdateBySql("update UserInfo set name='ttt' where name='name'");
+		return connect.updateBySql("update UserInfo set name='ttt' where name='name'");
 	}
 	
 }

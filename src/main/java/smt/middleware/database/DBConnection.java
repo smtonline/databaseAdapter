@@ -1,6 +1,8 @@
 package smt.middleware.database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -12,7 +14,7 @@ import util.Global;
 
 public class DBConnection {
 	
-	private final Logger log = Logger.getLogger(DBConnection.class);
+	private static final Logger log = Logger.getLogger(DBConnection.class);
 	
 	public static DBConnection dbConnection = null;
 	private Connection connection = null;
@@ -72,4 +74,39 @@ public class DBConnection {
 		return null;
 	}
 	
+	public static void close(Connection conn,PreparedStatement pre,ResultSet rs){
+		close(conn);
+		close(pre);
+		close(rs);
+	}
+	
+	public static void close(Connection conn){
+		try{
+			if(conn != null){
+				conn.close();
+			}
+		}catch(SQLException ex){
+			log.error("close data connection error", ex);
+		}		
+	}
+	
+	public static void close(PreparedStatement pre){
+		try{
+			if(pre != null){
+				pre.close();
+			}
+		}catch(SQLException ex){
+			log.error("close data preparedStatement error", ex);
+		}
+	}
+	
+	public static void close(ResultSet rs){
+		try{
+			if(rs != null){
+				rs.close();
+			}
+		}catch(SQLException ex){
+			log.error("close data resultSet error", ex);
+		}
+	}
 }
