@@ -14,11 +14,14 @@ public class DBFactory {
 		if(dbType.equals(Global.ORACLE_TYPE)){
 			 return new DBOracle(DBConnection.getDBConnection().getConnection());
     	}else if(dbType.equals(Global.MYSQL_TYPE)){
-    		 return new DBOracle(DBConnection.getDBConnection().getConnection());
+    		 return new DBMysql(DBConnection.getDBConnection().getConnection());
     	}else if(dbType.equals(Global.MSSQL_TYPE)){
     		 return new DBOracle(DBConnection.getDBConnection().getConnection());
     	}
 		return null;    	
 	}
+	
+	
+	
 	
 }
