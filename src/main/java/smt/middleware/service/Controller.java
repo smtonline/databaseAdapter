@@ -1,6 +1,7 @@
 package smt.middleware.service;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -8,6 +9,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import smt.middleware.core.DataSourceParse;
+import smt.middleware.database.DBConnect;
+import smt.middleware.database.DBFactory;
 import util.DomUtils;
 import util.Environment;
 
@@ -88,7 +91,6 @@ public class Controller {
 		//获取数据库脚本
 		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
 		String sql = sqlElement.getText();
-		
 		//TODO:执行sql语句
 		String result = null;
 		if (isJsonFormat) {
@@ -97,6 +99,11 @@ public class Controller {
 			
 		}
 		return result;
+	}
+	
+	public String test() throws SQLException {
+		DBConnect connect = DBFactory.CreatConnect("oracle");
+		return connect.UpdateBySql("update UserInfo set name='ttt' where name='name'");
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 
+import smt.middleware.config.Config;
 import util.Environment;
 import util.Global;
 
@@ -33,7 +34,7 @@ public class DBConnection {
     	BasicDataSource curr_ds = new BasicDataSource();
     	Environment environment = Environment.getInstance();
     	
-    	String post = null;
+    	String post = environment.getDBPort();
     	if(environment.getDBType().equals(Global.ORACLE_TYPE)){
     		curr_ds.setDriverClassName(Global.ORACLE_DRIVER);
     		if(environment.getDBPort() == null || environment.getDBPort().equals("")){
@@ -55,9 +56,9 @@ public class DBConnection {
     	}    	
     	curr_ds.setUsername(environment.getDBUserName());
     	curr_ds.setPassword(environment.getDBPassword());
-    	curr_ds.setMaxActive(50);
-    	curr_ds.setMaxIdle(10);
-    	curr_ds.setMaxWait(1000);
+    	curr_ds.setMaxActive(Config.getInt("jdbcMaxActive"));
+    	curr_ds.setMaxIdle(Config.getInt("jdbcMaxIdle"));
+    	curr_ds.setMaxWait(Config.getInt("jdbcMaxWait"));
     	
     	try{
     		connection = curr_ds.getConnection(); 
@@ -69,11 +70,6 @@ public class DBConnection {
 	
 	public Connection getConnection(){
 		return connection;
-	}
-	
-	public static void main(String[] args){
-		DBConnection conn = new DBConnection();
-		conn.getConnection();
 	}
 	
 }

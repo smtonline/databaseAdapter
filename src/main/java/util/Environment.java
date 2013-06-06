@@ -14,8 +14,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * 环境类,负责获取数据库配置和获取系统的文件夹路径
@@ -34,10 +32,8 @@ public class Environment {
 	private String mDBPassword;
 	private String mDBName;
 	private String mDBPort;
-	private ApplicationContext mContext;
 
 	private Environment() {
-		mContext = new ClassPathXmlApplicationContext("spring-config.xml");
 		findDatasourceFolderPath();
 		initDatabaseConfig();
 	}
@@ -106,16 +102,6 @@ public class Environment {
 	}
 	public String getDBPort() {
 		return mDBPort;
-	}
-
-	/**
-	 * 获取bean对象
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public Object getBean(String name) {
-		return mContext.getBean(name);
 	}
 
 	/**

@@ -12,10 +12,6 @@ public abstract class DBConnect {
 
 	public DBConnect() { }
 
-    public abstract String Connect();
-
-    public abstract String CheckConn();//数据连接检查 
-
 //    public abstract String FillDataset(String strsql, String TableName, DataSet DS);
     //填充dataset
     public abstract String DeleteBySql(String strsql);

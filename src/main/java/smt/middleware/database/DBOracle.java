@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import smt.middleware.entity.ColumnInfo;
 import smt.middleware.entity.DataTable;
 import smt.middleware.entity.MetadataInfo;
@@ -21,40 +18,11 @@ public class DBOracle extends DBConnect {
 
 	private final Logger log = Logger.getLogger(DBOracle.class);
 	
-	private Connection connection; //全局数据库连接
-	private String MyConnectString; //全局连接字符串
-	@Autowired
-	private DBConnection dbConnection ;
+	private Connection mConnection; //全局数据库连接
 	
-	public DBOracle(String connectstring) throws SQLException{
-		connection = dbConnection.getConnection();
-		MyConnectString = connectstring;
-	}
-	
-	@Override
-	public String Connect() { //创建数据库连接
-		// TODO Auto-generated method stub
-		try{
-			if(connection.isClosed()){
-				connection = dbConnection.getConnection();
-			}
-			return "ok";
-		}catch(SQLException ex){
-			return ex.getMessage();
-		}
-	}
-
-	@Override
-	public String CheckConn() { //数据连接检查
-		// TODO Auto-generated method stub
-		try{
-			if(connection.isClosed()){
-				this.Connect();
-			}
-			return "ok";
-		}catch(SQLException ex){
-			return ex.getMessage();
-		}
+	public DBOracle(Connection connection) throws SQLException{
+		mConnection = connection;
+		
 	}
 
 	/**
@@ -62,13 +30,11 @@ public class DBOracle extends DBConnect {
 	 */
 	@Override
 	public String DeleteBySql(String strsql) {
-		// TODO Auto-generated method stub
 		try {
-			PreparedStatement pre = connection.prepareStatement(strsql);
+			PreparedStatement pre = mConnection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 	}
@@ -80,11 +46,10 @@ public class DBOracle extends DBConnect {
 	 */
 	public String UpdateBySql(String strsql){
 		try {
-			PreparedStatement pre = connection.prepareStatement(strsql);
+			PreparedStatement pre = mConnection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 	}
@@ -96,11 +61,10 @@ public class DBOracle extends DBConnect {
 	 */
 	public String InsertBySql(String strsql){
 		try {
-			PreparedStatement pre = connection.prepareStatement(strsql);
+			PreparedStatement pre = mConnection.prepareStatement(strsql);
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 	}
@@ -151,12 +115,11 @@ public class DBOracle extends DBConnect {
          strSql.append(" on t.table_name=c.table_name ");
          strSql.append(" where t.table_name= ? ");
          try {
-			PreparedStatement pre = connection.prepareStatement(strSql.toString());
+			PreparedStatement pre = mConnection.prepareStatement(strSql.toString());
 			pre.setString(0, tableName);
 			ResultSet re = pre.executeQuery();
 			return re;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}
 	}
@@ -175,7 +138,7 @@ public class DBOracle extends DBConnect {
         strSql.append(" where t.table_name = ? ");
         
         try {
-			PreparedStatement pre = connection.prepareStatement(strSql.toString());
+			PreparedStatement pre = mConnection.prepareStatement(strSql.toString());
 			pre.setString(0, tableName);
 			ResultSet re = pre.executeQuery();
 			return re;

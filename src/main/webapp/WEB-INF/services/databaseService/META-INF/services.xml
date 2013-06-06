@@ -4,7 +4,12 @@
     <description>database Adapter</description>
     <schema schemaNamespace="http://tempuri.org/" />
     <parameter name="ServiceClass" locked="false">smt.middleware.service.Controller</parameter>
+    
     <operation name="dataBus">
+      <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
+    
+    <operation name="test">
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
   </service>
