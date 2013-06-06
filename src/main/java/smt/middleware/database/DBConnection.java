@@ -16,7 +16,7 @@ public class DBConnection {
 	
 	public static DBConnection dbConnection = null;
 	private Connection connection = null;
-	
+	private BasicDataSource mDatasource;
 	private DBConnection(){
 		initConnection();
 	}
@@ -59,17 +59,17 @@ public class DBConnection {
     	curr_ds.setMaxActive(Config.getInt("jdbcMaxActive"));
     	curr_ds.setMaxIdle(Config.getInt("jdbcMaxIdle"));
     	curr_ds.setMaxWait(Config.getInt("jdbcMaxWait"));
+    	log.info("datasource init finish........");
     	
-    	try{
-    		connection = curr_ds.getConnection(); 
-    		log.info("data connection success........");
-    	}catch(SQLException ex){
-    		log.error("data connection error:"+ ex);
-    	} 
 	}
 	
 	public Connection getConnection(){
-		return connection;
+		try{
+    		return connection = mDatasource.getConnection(); 
+    	}catch(SQLException ex){
+    		log.error("data connection error:"+ ex);
+    	} 
+		return null;
 	}
 	
 }

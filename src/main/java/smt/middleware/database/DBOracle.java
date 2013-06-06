@@ -47,6 +47,7 @@ public class DBOracle extends DBConnect {
 	public String UpdateBySql(String strsql){
 		try {
 			PreparedStatement pre = mConnection.prepareStatement(strsql);
+			
 			pre.executeUpdate();
 			return "ok";
 		} catch (SQLException e) {
