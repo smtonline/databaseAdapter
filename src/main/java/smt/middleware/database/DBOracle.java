@@ -149,7 +149,31 @@ public class DBOracle extends DBConnect {
 	@Override
 	public int dmlSql(String sql, Map<String, String> sqlParam) {
 		// TODO Auto-generated method stub
-		return 0;
+		PreparedStatement pre = null;
+		int count = 0;
+		try{
+			Set<Entry<String, String>> set = sqlParam.entrySet();
+			Iterator<Entry<String, String>> iterator = set.iterator();
+			List<String> list = new ArrayList<String>();
+			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
+				Entry<String, String> entry = (Entry<String, String>) iterator2
+						.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				sql = sql.replaceAll(key, "?");
+				list.add(value);
+			}
+			pre = connection.prepareStatement(sql);
+			for (String str : list) {
+				pre.setObject(list.indexOf(str) + 1, str);
+			}
+			count = pre.executeUpdate();
+		}catch(SQLException ex){
+			log.error("Query Erro", ex);
+		}finally{
+			DBConnection.close(connection, pre, null);
+		}
+		return count;
 	}
 	
 
