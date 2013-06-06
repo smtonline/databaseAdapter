@@ -11,6 +11,7 @@ import org.dom4j.Element;
 import smt.middleware.core.DataSourceParse;
 import smt.middleware.database.DBConnect;
 import smt.middleware.database.DBFactory;
+import smt.middleware.entity.DataTable;
 import util.DomUtils;
 import util.Environment;
 
@@ -22,6 +23,7 @@ public class Controller {
 	private static final Logger log = Logger.getLogger(Controller.class);
 	private static final String XML_FORMAT_ERROR = "requestXmlFormatErr";
 	private static final String MSD_FORMAT_ERROR = "msdFormatErr";
+	private static final String SQL_EXECUTE_ERROR = "sqlExecuteErr";
 	private Environment environment = Environment.getInstance();
 	/**
 	 * 客户端请求服务接口
@@ -47,8 +49,10 @@ public class Controller {
 		} catch (DocumentException e) {
 			log.debug("msc文件格式错误", e);
 			return MSD_FORMAT_ERROR;
+		} catch (SQLException e) {
+			log.debug("sql语句执行成功", e);
+			return SQL_EXECUTE_ERROR;
 		}
-		
 		return result;
 	}
 	
@@ -83,20 +87,22 @@ public class Controller {
 	 * @param isJsonFormat true返回json格式数据
 	 * @return
 	 * @throws DocumentException 
+	 * @throws SQLException 
 	 */
-	private String executeSql(String msdFileName, Map<String, String> parametersMap, boolean isJsonFormat) throws DocumentException {
+	private String executeSql(String msdFileName, Map<String, String> parametersMap, boolean isJsonFormat) throws DocumentException, SQLException {
 		String dsFolderPath = environment.getDatasourceFolderPath();
 		File msdFile = new File(dsFolderPath, msdFileName);
 		Element rootElement = DomUtils.getDocmentByFile(msdFile.getAbsolutePath()).getRootElement();
 		//获取数据库脚本
 		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
 		String sql = sqlElement.getText();
-		//TODO:执行sql语句
-		String result = null;
+		DBConnect dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
+		DataTable dbTable = dbConnect.getQuery(sql, parametersMap);
+		String result = "";
 		if (isJsonFormat) {
-			
+			result = dbTable.toJson();
 		} else {
-			
+			result = dbTable.toXml();
 		}
 		return result;
 	}

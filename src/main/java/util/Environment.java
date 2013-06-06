@@ -145,36 +145,43 @@ public class Environment {
 				.selectSingleNode("//configuration/appSettings/add[@key='DBType']");
 		Element dbTypeElement = (Element) dbTypeNode;
 		mDBType = dbTypeElement.attributeValue("value");
+		log.debug("Init DataBase Type:" + mDBType);
 
 		// 获取数据连接地址
 		Node dbAddressNode = rootElement
 				.selectSingleNode("//configuration/appSettings/add[@key='DBAddress']");
 		Element dbAddressElement = (Element) dbAddressNode;
 		mDBAddress = dbAddressElement.attributeValue("value");
-
+		log.debug("Init DataBase Type:" + mDBType);
+		
 		// 获取数据库名
 		Node dbNameNode = rootElement
 				.selectSingleNode("//configuration/appSettings/add[@key='DBName']");
 		Element dbNameElement = (Element) dbNameNode;
 		mDBName = dbNameElement.attributeValue("value");
+		log.debug("Init DataBase name:" + mDBName);
 
 		// 获取数据库名
 		Node dbPortNode = rootElement
 				.selectSingleNode("//configuration/appSettings/add[@key='DBPost']");
 		Element dbPortElement = (Element) dbPortNode;
 		mDBPort = dbPortElement.attributeValue("value");
+		log.debug("Init DataBase port:" + mDBPort);
 
 		// 获取数据库用户名
 		Node dbUserNameNode = rootElement
 				.selectSingleNode("//configuration/appSettings/add[@key='DBUserName']");
 		Element dbUserNameElement = (Element) dbUserNameNode;
 		mDBUserName = dbUserNameElement.attributeValue("value");
-
+		log.debug("Init DataBase username:" + mDBUserName);
+		
 		// 获取数据库用户密码
 		Node dbPasswordNode = rootElement
 				.selectSingleNode("//configuration/appSettings/add[@key='DBPassword']");
 		Element dbPasswordElement = (Element) dbPasswordNode;
 		mDBPassword = dbPasswordElement.attributeValue("value");
+		log.debug("Init DataBase password:" + mDBPassword);
+		
 	}
 
 }
