@@ -1,106 +1,187 @@
 package smt.middleware.database;
 
-import java.util.Dictionary;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import smt.middleware.entity.DataTable;
-import smt.middleware.entity.MetadataInfo;
-import smt.middleware.entity.ProjectInfo;
-import smt.middleware.entity.TableInfo;
 
 public abstract class DBConnect {
 
-	public DBConnect() { }
+	private final Logger log = Logger.getLogger(DBConnect.class);
+	protected Connection connection;
 
-//    public abstract String FillDataset(String strsql, String TableName, DataSet DS);
-    //填充dataset
-    public abstract String DeleteBySql(String strsql);
-    //提交删除命令 
-    public abstract String UpdateBySql(String strsql);//提交更新命令   
-    public abstract String InsertBySql(String strsql);//提交插入命令
+	public DBConnect(Connection connection) {
+		this.connection = connection;
+	}
 
-    /// <summary>
-    /// 查询数据库中所有用户表
-    /// </summary>
-    /// <returns>DataTable</returns>
-    public abstract DataTable GetUserTables();
+	/**
+	 * 提交删除命令
+	 */
+	public String deleteBySql(String strsql) {
+		// TODO Auto-generated method stub
+		PreparedStatement pre = null;
+		try {
+			pre = connection.prepareStatement(strsql);
+			pre.executeUpdate();
+			return "ok";
+		} catch (SQLException e) {
+			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
+		}
+	}
 
-     /// <summary>
-    /// 获取指定表的结构
-    /// </summary>
-    /// <param name="tableName">表名</param>
-    /// <returns>返回表结构类型</returns>
-    public abstract TableInfo GetUserTableSchema(String tableName);
+	/**
+	 * 提交更新命令
+	 */
+	public String updateBySql(String strsql) {
+		PreparedStatement pre = null;
+		try {
+			pre = connection.prepareStatement(strsql);
+			pre.executeUpdate();
+			return "ok";
+		} catch (SQLException e) {
+			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
+		}
+	}
 
-    /// <summary>
-    /// 获取数据库架构
-    /// </summary>
-    /// <returns></returns>
-    public abstract List<TableInfo> GetUserDBSchema();
+	public String insertBySql(String strsql) {
+		PreparedStatement pre = null;
+		try {
+			pre = connection.prepareStatement(strsql);
+			pre.executeUpdate();
+			return "ok";
+		} catch (SQLException e) {
+			return e.getMessage();
+		} finally {
+			DBConnection.close(connection, pre, null);
+		}
+	}
 
-    /// <summary>
-    /// 元数据获取
-    /// </summary>
-    /// <param name="modelName">元数据标识名称</param>
-    /// <returns>返回数据集</returns>
-    public abstract DataTable GetMetadataByModelName(String modelName);
+	public DataTable getQuery(String sql) {
+		String strSql = sql;
+		DataTable dataTable = null;
+		PreparedStatement pre = null;
+		ResultSet rs = null;
+		try {
+			pre = connection.prepareStatement(strSql);
+			rs = pre.executeQuery();
+			dataTable = new DataTable(connection,pre,rs);
+			return dataTable;
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBConnection.close(connection, pre, rs);
+		}
+		return dataTable;
+	}
 
-    /// <summary>
-    /// 增加元数据信息
-    /// </summary>
-    /// <param name="info">元数据实体</param>
-    /// <returns>操作影响行数</returns>
-    public abstract int MetadataSave(MetadataInfo info);
+	public int dmlSql(String sql) {
+		PreparedStatement pre = null;
+		int result = 0;
+		try {
+			pre = connection.prepareStatement(sql);
+			result = pre.executeUpdate();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			DBConnection.close(connection, pre, null);
+		}
+		return result;
+	}
 
-    /// <summary>
-    /// 删除元数据信息
-    /// </summary>
-    /// <param name="metadataID">元数据信息ID</param>
-    /// <returns>操作影响行数</returns>
-    public abstract int MetadataDelete(String metadataID);
+	public DataTable getQuery(String sql, Map<String, String> sqlParam) {
+		PreparedStatement pre = null;
+		ResultSet rs = null;
+		try{
+			Set<Entry<String, String>> set = sqlParam.entrySet();
+			Iterator<Entry<String, String>> iterator = set.iterator();
+			List<String> list = new ArrayList<String>();
+			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
+				Entry<String, String> entry = (Entry<String, String>) iterator2
+						.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				sql = sql.replaceAll(key, "?");
+				list.add(value);
+			}
+			pre = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+			log.debug(sql);
+			log.debug(list.toString());
+			for (String str : list) {
+				pre.setObject(list.indexOf(str) + 1, str);
+			}
+			return new DataTable(connection,pre,pre.executeQuery());
+		}catch(SQLException ex){
+			log.error("Query Erro", ex);
+		}finally{
+			//DBConnection.close(connection, pre, rs);
+		}
+		return null;
+	}
 
-    /// <summary>
-    /// 获取元数据模版
-    /// </summary>
-    /// <param name="DeviceType">设备</param>
-    /// <param name="ModelID">modelid</param>
-    /// <returns>string</returns>
-    public abstract String GetMoblieTemplate(String DeviceType, String ModelID);
-
-    /// <summary>
-    /// 根据IDE的查询分析器的sql语句获取数据
-    /// </summary>
-    /// <param name="sql">sql语句</param>
-    /// <returns>返回数据集</returns>
-    public abstract DataTable GetQuery(String sql);
-    
-    /// <summary>
-    /// 根据IDE的查询分析器的sql语句操作数据(insert/update/delete)
-    /// </summary>
-    /// <param name="sql">sql语句</param>
-    /// <returns>返回int</returns>
-    public abstract int DMLSql(String sql);
-    
-    /// <summary>
-    /// 根据IDE的查询分析器的sql语句获取数据
-    /// </summary>
-    /// <param name="sql">sql语句</param>
-    ///  <param name="sql">参数</param>
-    /// <returns>返回数据集</returns>
-    public abstract DataTable GetQuery(String sql,Dictionary<String,String> sqlParam);
-
-    /// <summary>
-    /// 根据IDE的查询分析器的sql语句操作数据(insert/update/delete)
-    /// </summary>
-    /// <param name="sql">sql语句</param>
-    /// <param name="sqlParam">参数</param>
-    /// <returns>返回int</returns>
-    public abstract int DMLSql(String sql,Dictionary<String,String> sqlParam);
-    
-    /// <summary>
-    /// 保存
-    /// </summary>
-    /// <param name="list">要保存的项目信息集合</param>
-    /// <returns>返回bool值</returns>
-    public abstract boolean ReleaseDBSave(List<ProjectInfo> list);
+	public int dmlSql(String sql, Map<String, String> sqlParam) {
+		PreparedStatement pre = null;
+		int count = 0;
+		try{
+			Set<Entry<String, String>> set = sqlParam.entrySet();
+			Iterator<Entry<String, String>> iterator = set.iterator();
+			List<String> list = new ArrayList<String>();
+			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
+				Entry<String, String> entry = (Entry<String, String>) iterator2
+						.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				sql = sql.replaceAll(key, "?");
+				list.add(value);
+			}
+			pre = connection.prepareStatement(sql);
+			for (String str : list) {
+				pre.setObject(list.indexOf(str) + 1, str);
+			}
+			count = pre.executeUpdate();
+		}catch(SQLException ex){
+			log.error("Query Erro", ex);
+		}finally{
+			DBConnection.close(connection, pre, null);
+		}
+		return count;
+	}
+	
+	/**
+	 * 不带参数的存储过程
+	 */
+	public abstract void executeNoParams(String callableName);
+	
+	/**
+	 * 带有输入参数的存储过程
+	 */
+	public abstract void executeInParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有输出参数存储过程
+	 */
+	public abstract void executeOutParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有返回状态存储过程
+	 */
+	public abstract void executeReturnParams(String callableName,String[] sqlParam);
+	
+	/**
+	 * 带有更新计数的存储过程
+	 */
+	public abstract void executeUpdateCount(String callableName, String[] sqlParam);
 }

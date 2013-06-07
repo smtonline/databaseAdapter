@@ -2,6 +2,7 @@ package smt.middleware.core;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.dom4j.Document;
@@ -63,7 +64,7 @@ public class DataSourceParse {
 	}
 	
 	private Map<String, String> parseParameters() {
-		Map<String, String> parametersMap = new HashMap<String, String>();
+		Map<String, String> parametersMap = new LinkedHashMap<String, String>();
 		List nodeLists = rootElement.selectNodes("//datasource/parameters/parameter");
 		Iterator iter = nodeLists.iterator();
 		for (Iterator iterator = nodeLists.iterator(); iterator.hasNext();) {
