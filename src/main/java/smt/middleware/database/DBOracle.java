@@ -29,7 +29,7 @@ public class DBOracle extends DBConnect {
 				log.debug(rs.getString("name"));
 			}
 		} catch (SQLException ex) {
-
+			ex.printStackTrace();
 		} finally {
 			DBConnection.close(connection, pre, rs);
 		}
