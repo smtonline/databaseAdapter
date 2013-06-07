@@ -103,59 +103,46 @@ public abstract class DBConnect {
 	}
 
 	public DataTable getQuery(String sql, Map<String, String> sqlParam) {
-		PreparedStatement pre = null;
-		ResultSet rs = null;
 		try{
+			NamedParameterStatement pre = new NamedParameterStatement(connection, sql);
 			Set<Entry<String, String>> set = sqlParam.entrySet();
 			Iterator<Entry<String, String>> iterator = set.iterator();
 			List<String> list = new ArrayList<String>();
 			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
 				Entry<String, String> entry = (Entry<String, String>) iterator2
 						.next();
-				String key = entry.getKey();
+				String key = entry.getKey().replace("@", "");
 				String value = entry.getValue();
-				sql = sql.replaceAll(key, "?");
-				list.add(value);
+				pre.setObject(key, value);
 			}
-			pre = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			log.debug(sql);
-			log.debug(list.toString());
-			for (String str : list) {
-				pre.setObject(list.indexOf(str) + 1, str);
-			}
-			return new DataTable(connection,pre,pre.executeQuery());
+			return new DataTable(connection,pre.getStatement(),pre.executeQuery());
 		}catch(SQLException ex){
 			log.error("Query Erro", ex);
-		}finally{
-			//DBConnection.close(connection, pre, rs);
 		}
 		return null;
 	}
 
 	public int dmlSql(String sql, Map<String, String> sqlParam) {
-		PreparedStatement pre = null;
+		PreparedStatement preStatment = null;
 		int count = 0;
 		try{
+			NamedParameterStatement pre = new NamedParameterStatement(connection, sql);
 			Set<Entry<String, String>> set = sqlParam.entrySet();
 			Iterator<Entry<String, String>> iterator = set.iterator();
 			List<String> list = new ArrayList<String>();
 			for (Iterator iterator2 = set.iterator(); iterator2.hasNext();) {
 				Entry<String, String> entry = (Entry<String, String>) iterator2
 						.next();
-				String key = entry.getKey();
+				String key = entry.getKey().replace("@", "");
 				String value = entry.getValue();
-				sql = sql.replaceAll(key, "?");
-				list.add(value);
+				pre.setObject(key, value);
 			}
-			pre = connection.prepareStatement(sql);
-			for (String str : list) {
-				pre.setObject(list.indexOf(str) + 1, str);
-			}
+			preStatment = pre.getStatement();
 			count = pre.executeUpdate();
 		}catch(SQLException ex){
 			log.error("Query Erro", ex);
 		}finally{
-			DBConnection.close(connection, pre, null);
+			DBConnection.close(connection, preStatment, null);
 		}
 		return count;
 	}
