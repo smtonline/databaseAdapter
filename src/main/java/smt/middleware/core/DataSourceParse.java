@@ -1,6 +1,5 @@
 package smt.middleware.core;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
-
 import util.DomUtils;
 
 public class DataSourceParse {
@@ -23,6 +21,8 @@ public class DataSourceParse {
 		responseType = parseResponseType();
 		sqlFileName = parseSqlFileName();
 		parametersMap = parseParameters();
+		//解析完成后释放资源
+		rootDocument.clearContent();
 	}
 	
 	

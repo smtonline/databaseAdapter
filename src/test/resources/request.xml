@@ -1,0 +1,21 @@
+<request name="UpdateRequest" url="~/Controller.svc" entry="BusEntry"
+	onSubmit="finishsubmit(result)" onError="">
+	<encoding>utf-8</encoding>
+	<ref file="T_MG_TestUpdate.msd">sql</ref>
+	<method></method>
+	<modelcode></modelcode>
+	<action>auto</action>
+	<object></object>
+	<params>
+		<items name="items1">
+			<item name="item1">
+				<value name="@UserID" value-of="hdnUserID" property="value"
+					value="123" field="UserID"></value>
+				<value name="@UserName" value-of="txtUserName" property="value"
+					value="" field="UserName"></value>
+				<value name="@Password" value-of="txtPassword" property="value"
+					value="Password" field="Password"></value>
+			</item>
+		</items>
+	</params>
+</request>

@@ -1,0 +1,10 @@
+<datasources>
+	<datasource name="dataSource0" entry="DataBus" source="~/Controller.svc"
+		bindtype="auto" requesttype="wcf" responsetype="json">
+		<function action="sql" file="T_MG_Test.msd" />
+		<parameters>
+			<parameter name="@name" value="123" />
+			<parameter name="@password" value="#123" />
+		</parameters>
+	</datasource>
+</datasources>
