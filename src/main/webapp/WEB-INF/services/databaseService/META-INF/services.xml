@@ -9,7 +9,7 @@
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
     
-    <operation name="test">
+    <operation name="busEntry">
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
   </service>

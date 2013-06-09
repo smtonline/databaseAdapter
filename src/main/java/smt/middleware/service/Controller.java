@@ -9,6 +9,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import smt.middleware.core.DataSourceParse;
+import smt.middleware.core.RequestParse;
 import smt.middleware.database.DBConnect;
 import smt.middleware.database.DBFactory;
 import smt.middleware.entity.DataTable;
@@ -50,35 +51,36 @@ public class Controller {
 			log.debug("msc文件格式错误", e);
 			return MSD_FORMAT_ERROR;
 		} catch (SQLException e) {
-			log.debug("sql语句执行成功", e);
+			log.debug("sql语句执行错误", e);
 			return SQL_EXECUTE_ERROR;
 		}
 		return result;
 	}
+	/**
+	 * request请求
+	 * @param xml
+	 * @return
+	 */
+	public String busEntry(String xml) {
+		if (StringUtils.isEmpty(xml)) {
+			return XML_FORMAT_ERROR;
+		}
+		String result = null;
+		try {
+			RequestParse request = new RequestParse(xml);
+			if (StringUtils.equalsIgnoreCase("sql", request.getRef())) {
+				result = dmtSql(request.getSqlFile(), request.getParametersMap());
+			}
+			return result;
+		} catch (DocumentException e) {
+			log.debug("msc文件格式错误", e);
+			return MSD_FORMAT_ERROR;
+		} catch (SQLException e) {
+			log.debug("sql语句执行错误", e);
+			return SQL_EXECUTE_ERROR;
+		}
+	}
 	
-//	public string DMTSql(string tableName, Dictionary<string, string> param)
-//    {
-//        string databaseType = string.Empty;
-//        string strConn = DBBase.GetConnectString(ref databaseType);
-//        DBFactory myFactory = new DBFactory();
-//        DBConnect dbConnect = myFactory.CreatConnect(databaseType, strConn);
-//        string msdurl = HostingEnvironment.ApplicationPhysicalPath + @"\datasource\" + tableName;
-//        XmlDocument xmlDoc = new XmlDocument();
-//        xmlDoc.Load(msdurl);
-//        XmlNode root = xmlDoc.SelectSingleNode("system/sql");//查找 
-//        string sql = root.InnerXml;
-//        int result = dbConnect.DMLSql(sql.Replace("<![CDATA[", "").Replace("]]>", ""), param);
-//        if (result >= 1)
-//        {
-//            return "1";
-//        }
-//        else
-//        {
-//            return "0";
-//        }
-//        
-//
-//    }
 	
 	/**
 	 * 执行sql语句
@@ -106,6 +108,26 @@ public class Controller {
 		}
 		return result;
 	}
+	/**
+	 * 执行dml语句
+	 * @param msdFileName
+	 * @param param
+	 * @return 返回值为影响条数
+	 * @throws SQLException
+	 * @throws DocumentException
+	 */
+	private String dmtSql(String msdFileName, Map<String, String> param) throws SQLException, DocumentException
+    {
+		String dsFolderPath = environment.getDatasourceFolderPath();
+		File msdFile = new File(dsFolderPath, msdFileName);
+		Element rootElement = DomUtils.getDocmentByFile(msdFile.getAbsolutePath()).getRootElement();
+		//获取数据库脚本
+		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
+		String sql = sqlElement.getText();
+		DBConnect dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
+		int result = dbConnect.dmlSql(sql, param);
+		return String.valueOf(result);
+    }
 	
 	public String test() throws SQLException {
 		DBConnect connect = DBFactory.CreatConnect("oracle");
