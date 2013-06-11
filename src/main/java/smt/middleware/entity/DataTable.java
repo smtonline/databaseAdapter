@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
@@ -15,10 +16,10 @@ public class DataTable {
 //	private String[] columnsName;
 //	private String[] dataType;
 	private Connection connection = null;
-	private PreparedStatement preparedStatement = null;
+	private Statement preparedStatement = null;
 	private ResultSet resultSet = null;
 	private ResultSetMetaData metaData;
-	public DataTable(Connection conn,PreparedStatement pre,ResultSet rs) {
+	public DataTable(Connection conn, Statement pre,ResultSet rs) {
 		try {
 			connection = conn;
 			preparedStatement = pre;
@@ -77,7 +78,7 @@ public class DataTable {
         	xmlBuffer.append("</rows>\n");
         }
         xmlBuffer.append("</data>");
-        DBConnection.close(connection,preparedStatement,resultSet);
+       // DBConnection.close(connection,preparedStatement,resultSet);
 		return xmlBuffer.toString();
 	}
 	/**

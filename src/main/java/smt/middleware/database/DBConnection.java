@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
@@ -73,7 +74,7 @@ public class DBConnection {
 		return null;
 	}
 	
-	public static void close(Connection conn,PreparedStatement pre,ResultSet rs){
+	public static void close(Connection conn,Statement pre,ResultSet rs){
 		close(rs);
 		close(pre);
 		close(conn);
@@ -89,7 +90,7 @@ public class DBConnection {
 		}		
 	}
 	
-	public static void close(PreparedStatement pre){
+	public static void close(Statement pre){
 		try{
 			if(pre != null){
 				pre.close();
