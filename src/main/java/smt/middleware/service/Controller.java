@@ -10,7 +10,7 @@ import org.dom4j.Element;
 
 import smt.middleware.core.DataSourceParse;
 import smt.middleware.core.RequestParse;
-import smt.middleware.database.DBConnect;
+import smt.middleware.database.AbstractDBOperator;
 import smt.middleware.database.DBFactory;
 import smt.middleware.entity.DataTable;
 import util.DomUtils;
@@ -25,7 +25,9 @@ public class Controller {
 	private static final String XML_FORMAT_ERROR = "requestXmlFormatErr";
 	private static final String MSD_FORMAT_ERROR = "msdFormatErr";
 	private static final String SQL_EXECUTE_ERROR = "sqlExecuteErr";
+	private static final String OTHER_ERROR = "otherErr";
 	private Environment environment = Environment.getInstance();
+	
 	/**
 	 * 客户端请求服务接口
 	 */
@@ -44,18 +46,24 @@ public class Controller {
 		String sqlFileName = dsParse.getSqlFileName();
 		Map<String, String> parametersMap = dsParse.getParametersMap();
 		String result = null;
+		
 		try {
 			result = executeSql(sqlFileName, parametersMap,
 					StringUtils.equalsIgnoreCase("json", responseType));
 		} catch (DocumentException e) {
-			log.debug("msc文件格式错误", e);
-			return MSD_FORMAT_ERROR;
+			log.error("xml格式错误", e);
+			return getErroXml(MSD_FORMAT_ERROR, e);
 		} catch (SQLException e) {
-			log.debug("sql语句执行错误", e);
-			return SQL_EXECUTE_ERROR;
+			log.error("sql语句执行错误", e);
+			return getErroXml(SQL_EXECUTE_ERROR, e);
+		} catch (Exception e) {
+			log.error("服务异常", e);
+			return getErroXml(OTHER_ERROR, e);
 		}
 		return result;
 	}
+
+	
 	/**
 	 * request请求
 	 * @param xml
@@ -98,15 +106,8 @@ public class Controller {
 		//获取数据库脚本
 		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
 		String sql = sqlElement.getText();
-		DBConnect dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
-		DataTable dbTable = dbConnect.getQuery(sql, parametersMap);
-		String result = "";
-		if (isJsonFormat) {
-			result = dbTable.toJson();
-		} else {
-			result = dbTable.toXml();
-		}
-		return result;
+		AbstractDBOperator dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
+		return dbConnect.getQuery(sql, parametersMap, isJsonFormat);
 	}
 	/**
 	 * 执行dml语句
@@ -124,14 +125,25 @@ public class Controller {
 		//获取数据库脚本
 		Element sqlElement = (Element)rootElement.selectSingleNode("//system/sql");
 		String sql = sqlElement.getText();
-		DBConnect dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
+		AbstractDBOperator dbConnect = DBFactory.CreatConnect(Environment.getInstance().getDBType());
 		int result = dbConnect.dmlSql(sql, param);
 		return String.valueOf(result);
     }
 	
-	public String test() throws SQLException {
-		DBConnect connect = DBFactory.CreatConnect("oracle");
-		return connect.updateBySql("update UserInfo set name='ttt' where name='name'");
+	/**
+	 * 自定义异常信息
+	 * @param msgCode
+	 * @param e
+	 * @return
+	 */
+	private String getErroXml(String msgCode, Exception e) {
+		StringBuffer errStringBuf = new StringBuffer();
+		errStringBuf.append("<erroCode>");
+		errStringBuf.append(msgCode);
+		errStringBuf.append("</erroCode>");
+		errStringBuf.append("<errMsg>");
+		errStringBuf.append(e.getMessage());
+		errStringBuf.append("</errMsg>");
+		return errStringBuf.toString();
 	}
-	
 }

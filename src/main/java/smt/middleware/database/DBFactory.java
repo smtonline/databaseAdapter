@@ -10,7 +10,7 @@ public class DBFactory {
 	private final Logger log = Logger.getLogger(DBFactory.class);
 
 	
-	public synchronized static DBConnect CreatConnect(String dbType) throws SQLException{
+	public synchronized static AbstractDBOperator CreatConnect(String dbType) throws SQLException{
 		if(dbType.equals(Global.ORACLE_TYPE)){
 			 return new DBOracle(DBConnection.getDBConnection().getConnection());
     	}else if(dbType.equals(Global.MYSQL_TYPE)){
@@ -18,7 +18,7 @@ public class DBFactory {
     	}else if(dbType.equals(Global.MSSQL_TYPE)){
     		 return new DBOracle(DBConnection.getDBConnection().getConnection());
     	}
-		return null;    	
+		return null;
 	}
 	
 	

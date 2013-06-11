@@ -78,7 +78,6 @@ public class DataTable {
         	xmlBuffer.append("</rows>\n");
         }
         xmlBuffer.append("</data>");
-       // DBConnection.close(connection,preparedStatement,resultSet);
 		return xmlBuffer.toString();
 	}
 	/**

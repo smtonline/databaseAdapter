@@ -65,13 +65,8 @@ public class DBConnection {
     	
 	}
 	
-	public Connection getConnection(){
-		try{
-    		return connection = mDatasource.getConnection(); 
-    	}catch(SQLException ex){
-    		log.error("data connection error:"+ ex);
-    	} 
-		return null;
+	public Connection getConnection() throws SQLException{
+		return connection = mDatasource.getConnection(); 
 	}
 	
 	public static void close(Connection conn,Statement pre,ResultSet rs){

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import smt.middleware.entity.DataTable;
 
-public class DBMysql extends DBConnect {
+public class DBMysql extends AbstractDBOperator {
 
 	private final Logger log = Logger.getLogger(DBMysql.class);
 

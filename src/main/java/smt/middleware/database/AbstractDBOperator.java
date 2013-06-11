@@ -15,12 +15,16 @@ import org.apache.log4j.Logger;
 
 import smt.middleware.entity.DataTable;
 
-public abstract class DBConnect {
+/**
+ * 数据库抽象操作对象,负责处理数据库查询,修改,更新,删除,存储过程执行操作
+ *
+ */
+public abstract class AbstractDBOperator {
 
-	private final Logger log = Logger.getLogger(DBConnect.class);
+	private final Logger log = Logger.getLogger(AbstractDBOperator.class);
 	protected Connection connection;
 
-	public DBConnect(Connection connection) {
+	public AbstractDBOperator(Connection connection) {
 		this.connection = connection;
 	}
 
@@ -28,7 +32,6 @@ public abstract class DBConnect {
 	 * 提交删除命令
 	 */
 	public String deleteBySql(String strsql) {
-		// TODO Auto-generated method stub
 		PreparedStatement pre = null;
 		try {
 			pre = connection.prepareStatement(strsql);
@@ -101,10 +104,20 @@ public abstract class DBConnect {
 		}
 		return result;
 	}
-
-	public DataTable getQuery(String sql, Map<String, String> sqlParam) {
-		try{
-			NamedParameterStatement pre = new NamedParameterStatement(connection, sql);
+	
+	/**
+	 * 执行sql语句查询操作.
+	 * 
+	 * @param sql
+	 * @param sqlParam
+	 * @return
+	 * @throws SQLException
+	 */
+	public String getQuery(String sql, Map<String, String> sqlParam,
+			boolean isJsonFormat) throws SQLException {
+		NamedParameterStatement pre = new NamedParameterStatement(connection,
+				sql);
+		try {
 			Set<Entry<String, String>> set = sqlParam.entrySet();
 			Iterator<Entry<String, String>> iterator = set.iterator();
 			List<String> list = new ArrayList<String>();
@@ -115,14 +128,27 @@ public abstract class DBConnect {
 				String value = entry.getValue();
 				pre.setObject(key, value);
 			}
-			return new DataTable(connection,pre.getStatement(),pre.executeQuery());
-		}catch(SQLException ex){
-			log.error("Query Erro", ex);
+			if (isJsonFormat) {
+				return new DataTable(connection, pre.getStatement(),
+						pre.executeQuery()).toJson();
+			} else {
+				return new DataTable(connection, pre.getStatement(),
+						pre.executeQuery()).toString();
+			}
+		} finally {
+			DBConnection.close(connection, pre.getStatement(),
+					pre.executeQuery());
 		}
-		return null;
 	}
-
-	public int dmlSql(String sql, Map<String, String> sqlParam) {
+	
+	/**
+	 * update delete insert语句执行方法
+	 * @param sql
+	 * @param sqlParam
+	 * @return
+	 * @throws SQLException 
+	 */
+	public int dmlSql(String sql, Map<String, String> sqlParam) throws SQLException {
 		PreparedStatement preStatment = null;
 		int count = 0;
 		try{
@@ -139,14 +165,19 @@ public abstract class DBConnect {
 			}
 			preStatment = pre.getStatement();
 			count = pre.executeUpdate();
-		}catch(SQLException ex){
-			log.error("Query Erro", ex);
-		}finally{
+		} finally{
 			DBConnection.close(connection, preStatment, null);
 		}
 		return count;
 	}
 	
-	
-	public abstract String executeCall(String callableName,Map<String, String> inParams, Map<String, Integer> outParams) throws SQLException ;
+	/**
+	 * 存储过程执行方法
+	 * @param callSql 存储过程名及参数
+	 * @param inParams 存储过程输入值.key表示输入值名,value表示输入值结果
+	 * @param outParams 存储过程输出值.key表述输出参数名,value表示数据结构类型
+	 * @return msd文件描述的结果结构
+	 * @throws SQLException
+	 */
+	public abstract String executeCall(String callSql,Map<String, String> inParams, Map<String, Integer> outParams) throws SQLException ;
 }

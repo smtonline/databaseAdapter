@@ -4,7 +4,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -13,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import smt.middleware.entity.DataTable;
 
-public class DBOracle extends DBConnect {
+public class DBOracle extends AbstractDBOperator {
 
 	private final Logger log = Logger.getLogger(DBOracle.class);
 
