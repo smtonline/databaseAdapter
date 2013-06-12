@@ -9,7 +9,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import util.DomUtils;
-
+/**
+ * 数据源请求解析 
+ */
 public class DataSourceParse {
 	private Element rootElement;
 	private String responseType;

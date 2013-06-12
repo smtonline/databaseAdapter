@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -117,6 +118,8 @@ public abstract class AbstractDBOperator {
 			boolean isJsonFormat) throws SQLException {
 		NamedParameterStatement pre = new NamedParameterStatement(connection,
 				sql);
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
 		try {
 			Set<Entry<String, String>> set = sqlParam.entrySet();
 			Iterator<Entry<String, String>> iterator = set.iterator();
@@ -128,16 +131,15 @@ public abstract class AbstractDBOperator {
 				String value = entry.getValue();
 				pre.setObject(key, value);
 			}
+			statement =  pre.getStatement();
+			resultSet = pre.executeQuery();
 			if (isJsonFormat) {
-				return new DataTable(connection, pre.getStatement(),
-						pre.executeQuery()).toJson();
+				return new DataTable(connection, statement, resultSet).toJson();
 			} else {
-				return new DataTable(connection, pre.getStatement(),
-						pre.executeQuery()).toString();
+				return new DataTable(connection, statement, resultSet).toXml();
 			}
 		} finally {
-			DBConnection.close(connection, pre.getStatement(),
-					pre.executeQuery());
+			DBConnection.close(connection, statement, resultSet);
 		}
 	}
 	

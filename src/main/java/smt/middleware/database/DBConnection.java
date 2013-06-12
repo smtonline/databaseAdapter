@@ -1,7 +1,6 @@
 package smt.middleware.database;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,13 +11,14 @@ import org.apache.log4j.Logger;
 import smt.middleware.config.Config;
 import util.Environment;
 import util.Global;
-
+/**
+ * 数据库连接处理类,负责开启及关闭数据库连接
+ *
+ */
 public class DBConnection {
-	
 	private static final Logger log = Logger.getLogger(DBConnection.class);
 	
 	public static DBConnection dbConnection = null;
-	private Connection connection = null;
 	private BasicDataSource mDatasource;
 	private DBConnection(){
 		initConnection();
@@ -30,7 +30,7 @@ public class DBConnection {
 		return dbConnection;
 	}
 	
-	public void initConnection(){
+	private void initConnection(){
 
 		log.info("start connection data........");
         // 获取从数据库连接   
@@ -64,18 +64,30 @@ public class DBConnection {
     	log.info("datasource init finish........");
     	
 	}
-	
+	/**
+	 * 获取数据库连接
+	 * @return
+	 * @throws SQLException
+	 */
 	public Connection getConnection() throws SQLException{
-		return connection = mDatasource.getConnection(); 
+		return mDatasource.getConnection(); 
 	}
-	
-	public static void close(Connection conn,Statement pre,ResultSet rs){
-		close(rs);
-		close(pre);
-		close(conn);
+	/**
+	 * 释放数据库资源
+	 * @param conn
+	 * @param statement
+	 * @param rs
+	 */
+	public static void close(Connection conn,Statement statement,ResultSet rs){
+		closeResult(rs);
+		closeStatement(statement);
+		closeConnection(conn);
 	}
-	
-	public static void close(Connection conn){
+	/**
+	 * 关闭数据库连接
+	 * @param conn
+	 */
+	public static void closeConnection(Connection conn){
 		try{
 			if(conn != null){
 				conn.close();
@@ -85,17 +97,24 @@ public class DBConnection {
 		}		
 	}
 	
-	public static void close(Statement pre){
+	/**
+	 * 关闭Statement
+	 * @param statement
+	 */
+	public static void closeStatement(Statement statement){
 		try{
-			if(pre != null){
-				pre.close();
+			if(statement != null){
+				statement.close();
 			}
 		}catch(SQLException ex){
 			log.error("close data preparedStatement error", ex);
 		}
 	}
-	
-	public static void close(ResultSet rs){
+	/**
+	 * 关闭resultSet对象
+	 * @param rs
+	 */
+	public static void closeResult(ResultSet rs){
 		try{
 			if(rs != null){
 				rs.close();

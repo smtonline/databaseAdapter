@@ -12,7 +12,6 @@ import smt.middleware.core.DataSourceParse;
 import smt.middleware.core.RequestParse;
 import smt.middleware.database.AbstractDBOperator;
 import smt.middleware.database.DBFactory;
-import smt.middleware.entity.DataTable;
 import util.DomUtils;
 import util.Environment;
 
@@ -34,32 +33,33 @@ public class Controller {
 	public String dataBus(String xml) {
 		
 		if (StringUtils.isEmpty(xml)) {
-			return XML_FORMAT_ERROR;
+			return getErroXml(XML_FORMAT_ERROR, new Exception("xml文本为空"));
 		}
 		DataSourceParse dsParse;
 		try {
 			dsParse = new DataSourceParse(xml);
 		} catch (DocumentException e) {
-			return XML_FORMAT_ERROR;
+			log.error("busEntry服务接口异常:xml格式错误", e);
+			return getErroXml(XML_FORMAT_ERROR, e);
 		}
 		String responseType = dsParse.getResponseType();
 		String sqlFileName = dsParse.getSqlFileName();
 		Map<String, String> parametersMap = dsParse.getParametersMap();
 		String result = null;
-		
 		try {
 			result = executeSql(sqlFileName, parametersMap,
 					StringUtils.equalsIgnoreCase("json", responseType));
 		} catch (DocumentException e) {
-			log.error("xml格式错误", e);
+			log.error("dataBus服务接口异常:xml或msd格式错误", e);
 			return getErroXml(MSD_FORMAT_ERROR, e);
 		} catch (SQLException e) {
-			log.error("sql语句执行错误", e);
+			log.error("dataBus服务接口异常:sql语句执行错误", e);
 			return getErroXml(SQL_EXECUTE_ERROR, e);
 		} catch (Exception e) {
-			log.error("服务异常", e);
+			log.error("dataBus服务接口异常:服务异常", e);
 			return getErroXml(OTHER_ERROR, e);
 		}
+		log.debug("dataBus result:" + result);
 		return result;
 	}
 
@@ -71,22 +71,32 @@ public class Controller {
 	 */
 	public String busEntry(String xml) {
 		if (StringUtils.isEmpty(xml)) {
-			return XML_FORMAT_ERROR;
+			return getErroXml(XML_FORMAT_ERROR, new Exception("xml文件为空"));
 		}
 		String result = null;
+		RequestParse request;
 		try {
-			RequestParse request = new RequestParse(xml);
+			request = new RequestParse(xml);
+		} catch (DocumentException e) {
+			log.error("busEntry服务接口异常:xml文件格式错误", e);
+			return getErroXml(XML_FORMAT_ERROR, e);
+		}
+		try {
 			if (StringUtils.equalsIgnoreCase("sql", request.getRef())) {
 				result = dmtSql(request.getSqlFile(), request.getParametersMap());
 			}
-			return result;
 		} catch (DocumentException e) {
-			log.debug("msc文件格式错误", e);
-			return MSD_FORMAT_ERROR;
+			log.error("busEntry服务接口异常:msd文件格式错误", e);
+			return getErroXml(MSD_FORMAT_ERROR, e);
 		} catch (SQLException e) {
-			log.debug("sql语句执行错误", e);
-			return SQL_EXECUTE_ERROR;
+			log.error("busEntry服务接口异常:sql语句执行错误", e);
+			return getErroXml(SQL_EXECUTE_ERROR, e);
+		} catch (Exception e) {
+			log.error("busEntry服务接口异常:服务异常", e);
+			return getErroXml(OTHER_ERROR, e);
 		}
+		log.debug("dataBus result:" + result);
+		return result;
 	}
 	
 	

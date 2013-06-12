@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2012 Shenzhen SMT online Co., Ltd.
- * 
- * 项目名称:SMT移动信息化解决方案系统
- * 创建日期:2013-1-29
- */
 package util;
 
 import java.io.ByteArrayInputStream;
