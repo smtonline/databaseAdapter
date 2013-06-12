@@ -7,10 +7,14 @@
     
     <operation name="dataBus">
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+      <!-- <inputActionMapping>http://tempuri.org/IController/dataBus</inputActionMapping>
+      <outputActionMapping>http://tempuri.org/IController/dataBus</outputActionMapping> -->
     </operation>
     
     <operation name="busEntry">
       <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+      <!-- <actionMapping>tns:http://tempuri.org/IController/busEntry</actionMapping>
+      <outputActionMapping>http://tempuri.org/IController/busEntry</outputActionMapping> -->
     </operation>
   </service>
 </serviceGroup>
