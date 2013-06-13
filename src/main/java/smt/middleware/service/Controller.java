@@ -24,7 +24,7 @@ import util.Environment;
  */
 @WebService(endpointInterface = "smt.middleware.service.IController", 
 serviceName = "Controller")
-public class Controller {
+public class Controller implements IController{
 	private static final Logger log = Logger.getLogger(Controller.class);
 	private static final String XML_FORMAT_ERROR = "requestXmlFormatErr";
 	private static final String MSD_FORMAT_ERROR = "msdFormatErr";
