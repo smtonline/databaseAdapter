@@ -3,6 +3,9 @@ package smt.middleware.service;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
+
+import javax.jws.WebService;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -19,6 +22,8 @@ import util.Environment;
  * 数据库适配服务接口
  *
  */
+@WebService(endpointInterface = "smt.middleware.service.IController", 
+serviceName = "Controller")
 public class Controller {
 	private static final Logger log = Logger.getLogger(Controller.class);
 	private static final String XML_FORMAT_ERROR = "requestXmlFormatErr";
