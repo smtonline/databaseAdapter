@@ -14,19 +14,11 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>javax.xml.ws</groupId>
-			<artifactId>jaxws-api</artifactId>
-			<version>2.2.11</version>
+			<groupId>javax.xml</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.glassfish.main.javaee-api</groupId>
-			<artifactId>javax.jws</artifactId>
-			<version>3.1.2.2</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -76,10 +68,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId>
+			<version>2.4.3</version>
 		</dependency>
 
 		<dependency>
@@ -108,11 +99,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId>
-			<version>2.4.3</version>
-		</dependency>
 
 		<dependency>
 			<groupId>dom4j</groupId>
@@ -120,10 +106,10 @@
 			<version>1.6.1</version>
 		</dependency>
 		<dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.4</version>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>

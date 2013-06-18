@@ -10,26 +10,25 @@
 
 
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
-	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<!-- <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" /> -->
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 	<!-- 上面3个 import 为导入 CXF 的 Bean 定义文件 -->
 
 
 
 	<!-- 定义具体实现的 Bean ，这个 Bean 的定义与 Spring 普通的 Bean 定义是一样的 -->
-	<bean id="Controller" class="smt.middleware.service.Controller" />
+	<bean id="Controller" class="smt.middleware.service.ControllerImpl" />
 
 
 	<!-- 通过 CXF 提供的 <jaxws:server> 标签，将定义的 Bean 暴露出去成为 Web Service 服务 -->
 	<!-- serviceClass = 接口类 -->
 	<!-- address = 调用时的URL -->
-	<jaxws:server id="WebController" serviceClass="smt.middleware.service.IController"
-		address="/Controller">
+	<jaxws:server id="WebController" serviceClass="smt.middleware.service.Controller"
+		address="/Controller.svc">
 		<!-- 要暴露的 bean 的引用，上面定义的bean id -->
 		<jaxws:serviceBean>
 			<ref bean="Controller" />
 		</jaxws:serviceBean>
 	</jaxws:server>
-
-
+	
 </beans>
